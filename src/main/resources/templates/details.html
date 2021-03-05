@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p class="item_name"  th:text="'Наименование товара: ' + ${item.getName()}" ></p>
+<p class="item_price" th:text="'Цена: ' + ${item.getPrice()} + '₽'" ></p>
+<p class="item_category" th:text="'Категория: ' + ${item.getCategoryName()}" ></p>
+<p class="item_phone" th:text="'Телефон: ' + ${item.getPhone()}" ></p>
+<p class="item_user" th:text="'Разместил: ' + ${item.getUserName()}" ></p>
+<a href="/">На главную</a>
+</body>
+</html>

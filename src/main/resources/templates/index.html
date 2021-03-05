@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SimpleShop - товары</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="UTF-8"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<style>
+    header{
+        display: block;
+        height: 100px;
+        width: 100%;
+        background-image: url(https://ppo-mopb2.ru/wp-content/uploads/2019/11/kindergarten3-sectionsep3.png);
+    }
+    body {
+        background-image: url(https://www.yourlocaliga.com/wp-content/uploads/sites/166/2017/08/bg1.jpg);
+        background-repeat: no-repeat;
+    }
+    p{
+        margin: 0;
+    }
+    .main{
+        display: flex;
+        align-self: center;
+        padding-left: 700px;
+    }
+    .content{
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        margin-left: 20%;
+    }
+    .item{
+        border: 2px solid black;
+        width: 300px;
+        display: block;
+        /*align-self: center;*/
+        /*flex-direction: column;*/
+        align-content: center;
+        margin-top: 30px;
+        background-color: antiquewhite;
+    }
+    .item_name{
+        padding-top: 15px;
+        padding-left: 15px;
+        text-align: left;
+    }
+    .item_price{
+        padding-bottom: 15px;
+        padding-top: 15px;
+        padding-left: 15px;
+        text-align: left;
+    }
+    .item_status{
+        padding-bottom: 15px;
+        padding-left: 15px;
+        text-align: left;
+    }
+    .itemAdd{
+        display: none;
+    }
+    .add-button{
+        float: right;
+        margin-top: -50px;
+        margin-right: 10px;
+    }
+    .cart{
+        float: right;
+        margin-right: 9%;
+        margin-top: -50px;
+    }
+    .col-md-4{
+        max-width: 400px;
+        align-content: center;
+    }
+    .add-to-cart-btn{
+        width: 100%;
+        background-color: chartreuse;
+    }
+    .add-to-cart-btn:hover{
+        background-color: darkgreen;
+    }
+
+    .show-details-btn{
+        width: 100%;
+        background-color: dodgerblue;
+    }
+    .show-details-btn:hover{
+        background-color: darkblue;
+        color: white;
+    }
+
+    .delete-btn{
+        width: 100%;
+        background-color: red;
+        color: white;
+    }
+    .delete-btn:hover{
+        background-color: darkred;
+        color: white;
+    }
+
+</style>
+
+<header>
+<h2 style="margin-left: 10%; font-family: Algerian,serif;">SimpleShop</h2>
+</header>
+
+<body>
+    <p>Нажмите <a th:href="@{/account}">сюда</a> чтобы войти</p>
+
+    <div>
+        <a class="cart" href="/cart" >
+            <button><img src="https://www.freeiconspng.com/uploads/green-shopping-cart-icon-5.png" style="width: 20px; height: 20px" alt="Корзина"/></button>
+        </a>
+    </div>
+  <a class="add-button" href="/add">
+    <button>+ Добавить товар</button>
+  </a>
+
+    <div th:if="${return}">
+        <h1 th:text="'Категория ' + ${cat}"></h1>
+    </div>
+
+  <div class="row content" id="item-list">
+    <div class="col-md-4" th:id="${item.getName()} + -item" th:each="item : ${items}">
+      <div class="item">
+        <form action="/" method="get">
+          <p th:text="'id:' + ${item.getId()}" style="display: none;"/>
+          <p class="item_name"  th:text="'Наименование товара: ' + ${item.getName()}" ></p>
+          <p class="item_price" th:text="'Цена: ' + ${item.getPrice()} + '₽'" ></p>
+          <p class="item_category" th:text="'Категория: ' + ${item.getCategoryName()}" ></p>
+
+          <button  class="btn btn-sm delete-btn" th:id="${item.getId()}" th:attr="data-item-id=${item.getId()}">Удалить товар</button>
+        </form>
+        <button class="btn btn-sm add-to-cart-btn" th:id="${item.getId()}" th:attr="data-item-id=${item.getId()}">Добавить в корзину</button>
+        <button class="btn btn-sm show-details-btn" th:id="${item.getId()}" th:attr="data-item-id=${item.getId()}">Посмотреть детали</button>
+      </div>
+    </div>
+  </div>
+    <div th:if="${return}">
+        <a href="/">Назад</a>
+    </div>
+    <footer>
+        <span th:each="category : ${categories}"
+              th:object="${category}">
+            <button class="category-btn" th:attr="data-category-name=${category.getId()}" th:text="${category.getName()}"></button>
+        </span>
+        <input type="text" placeholder="Найти товар" id="search-item"/>
+        <button class="btn btn-sm search-btn">Найти</button>
+    </footer>
+
+  <script>
+
+      $(".category-btn").click((e) => {
+          let btn = $(e.currentTarget);
+          let categoryId = btn.attr("data-category-name");
+          window.location.href = "/category/" + categoryId + "/show";
+      });
+
+      $(".add-to-cart-btn").click((e) => {
+          let btn = $(e.currentTarget);
+          let itemId = btn.attr("data-item-id");
+          btn.css({
+          'color': 'gray'
+          });
+          btn.attr("disabled", "disabled");
+          $.post("/add/" + itemId + "/cart", () => {
+          });
+          history.go(0);
+      });
+
+      $(".delete-btn").click((e) => {
+          let btn = $(e.currentTarget);
+          let itemId = btn.attr("data-item-id");
+          btn.attr("disabled", "disabled");
+          $.post("/item/" + itemId + "/delete", () => {
+          });
+          history.go(0);
+      });
+
+      $(".show-details-btn").click((e) => {
+          let btn = $(e.currentTarget);
+          let itemId = btn.attr("data-item-id");
+          btn.attr("disabled", "disabled");
+          window.location.href = "/item/" + itemId + "/show";
+      });
+
+      $(".search-btn").click((e) => {
+          let btn = $(e.currentTarget);
+          let name = document.getElementById('search-item').value
+          btn.attr("disabled", "disabled");
+          window.location.href = "/item/" + name + "/find";
+      });
+
+  </script>
+</body>
+</html>

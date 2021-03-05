@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Your account</title>
+    </head>
+    <body>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Выйти"/>
+        </form>
+        <a href="/"><button>На главную</button></a>
+        <form th:action="@{/showuseritems}" method="get">
+            <input type="submit" value="Посмотреть мои товары"/>
+        </form>
+        <form th:action="@{/account/delete}" method="post">
+            <input type="submit" value="Удалить аккаунт"/>
+        </form>
+
+        <div th:if="${error}">
+            <h1 id="err409">HTTP 409 Conflict. You need to delete all your items to delete account.</h1>
+        </div>
+
+        <div th:if="${showItems}" class="row content" id="item-list">
+            <div class="col-md-4" th:id="${item.getName()} + item" th:each="item : ${items}">
+                <div class="item">
+                    <form action="/" method="get">
+                        <p th:text="'id:' + ${item.getId()}" style="display: none;"></p>
+                        <p class="item_name"  th:text="'Наименование товара: ' + ${item.getName()}"></p>
+                        <p class="item_price" th:text="'Цена: ' + ${item.getPrice()} + '₽'" ></p>
+                        <p class="item_category" th:text="'Категория: ' + ${item.getCategoryName()}" ></p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

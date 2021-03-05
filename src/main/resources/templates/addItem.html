@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add item to shop</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="UTF-8"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<header>
+    <h2 style="margin-left: 10%; font-family: Algerian,serif;">SimpleShop</h2>
+</header>
+<body>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+    <style>
+        #confirm{
+            display: none;
+        }
+        header{
+            display: block;
+            height: 100px;
+            width: 100%;
+            background-image: url(https://ppo-mopb2.ru/wp-content/uploads/2019/11/kindergarten3-sectionsep3.png);
+        }
+        body {
+            background-image: url(https://www.yourlocaliga.com/wp-content/uploads/sites/166/2017/08/bg1.jpg);
+            background-repeat: no-repeat;
+        }
+        .itemAdd{
+            align-content: center;
+            margin-left: 35%;
+            margin-top: 10%;
+        }
+    </style>
+
+        
+    <div class= "itemAdd" id="prodAdd" >
+        <a href="/"><button>Вернуться в товары</button></a>
+        <span class="descr" id="add-item">Добавить новый товар</span>
+        <form action="/add" method="post" enctype="multipart/form-data">
+            <input type="text" placeholder="Name" name="name" id="name" th:required="required"/>
+            <input type="number" placeholder="Price" name="price" id="price" max="2147483647" th:required="required"/>
+            <input type="tel" placeholder="Phone" name="phone" id="phone" th:required="required"/>
+            <select name="category" id="category" th:required="required">
+                <option th:each="category : ${categories}"
+                        th:value="${category.getName()}"
+                        th:text="${category.getName()}"></option>
+            </select>
+            <button type="submit" id="submit">Добавить</button>
+        </form>
+    </div>
+
+
+</body>
+</html>

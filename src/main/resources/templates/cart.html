@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Your cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="UTF-8"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<header>
+    <h2 style="margin-left: 10%; font-family: Algerian,serif;">SimpleShop</h2>
+</header>
+<body>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+<style>
+    header{
+        display: block;
+        height: 100px;
+        width: 100%;
+        background-image: url(https://ppo-mopb2.ru/wp-content/uploads/2019/11/kindergarten3-sectionsep3.png);
+    }
+    body {
+        background-image: url(https://www.yourlocaliga.com/wp-content/uploads/sites/166/2017/08/bg1.jpg);
+        background-repeat: no-repeat;
+    }
+    h1{
+       padding-left: 700px;
+    }
+    p{
+    margin: 0;
+    }
+    .content{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .item{
+        border: 2px solid black;
+        width: 700px;
+        display: flex;
+        align-self: center;
+        flex-direction: column;
+        align-content: center;
+        margin-top: 30px;
+        background-color: antiquewhite;
+    }
+    .item_name{
+        padding-top: 15px;
+        padding-left: 15px;
+    }
+    .item_price{
+        padding-bottom: 15px;
+        padding-top: 15px;
+        padding-left: 15px;
+    }
+    .itemAdd{
+        display: none;
+    }
+    .in-cart{
+        display: none;
+    }
+    .delete-btn{
+        background-color: red;
+        width: 100%;
+        color: white;
+    }
+    .delete-btn:hover{
+        background-color: darkred;
+        color: white;
+    }
+    .buy-button{
+        background-color: chartreuse;
+    }
+    .buy-button:hover{
+        background-color: darkgreen;
+    }
+
+</style>
+
+
+<a href="/"><button class="back">Вернуться в товары</button></a>
+<h1>
+    Ваши товары:
+</h1>
+    <div class="content">
+        <div  th:id="${item.getId()} + -item" th:each="item : ${items}">
+            <div class="item">
+                <form action="/cart" method="get">
+                    <p th:text="'id:' + ${item.getId()}" style="display: none;"/>
+                        <p class="item_name"  th:text="'Наименование товара: ' + ${item.getName()}" ></p>
+                        <p class="item_price" th:text="'Цена: ' + ${item.getPrice()} + '₽'" ></p>
+                        <button class="btn btn-sm delete-btn" th:id="${item.getId()}" th:attr="data-item-id=${item.getId()}">Удалить из корзины</button>
+                </form>
+            </div>
+        </div>
+        <h2 th:text="'Итого: ' + ${sum} + '₽'" id="total"></h2>
+        <button class="buy-button" th:attr="data-items=${items}">Оформить заказ</button>
+    </div>
+
+<script>
+ $(".delete-btn").click((e) => {
+                var btn = $(e.currentTarget);
+                var itemId = btn.attr("data-item-id");
+                btn.attr("disabled", "disabled");
+
+                $.post("/item/" + itemId + "/delete/cart", () => {
+
+                });
+                })
+ $(".buy-button").click((e) => {
+     $.post("/items/deleteAll/cart", () => {
+     });
+     history.go(0);
+ });
+</script>
+        
+</body>
+</html>
